@@ -1,14 +1,13 @@
 class Heap:
     def __init__(self, L = []):
         self.buf = L
-        self.buf = self.heapify(L)
+        self.heapify()
 
-    def heapify(self, L):
+    def heapify(self):
         """Heapify and return L"""
-        if len(L) == 0: return L
-        for i in range(len(L)-1, -1, -1):
-            self.percolateDown(L, i)
-        return L
+        if len(self.buf) == 0: return self.buf
+        for i in range(len(self.buf)-1, -1, -1):
+            self.percolateDown(i)
 
     def leftChild(self, index):
         """Returns index of the left child of buf[index]"""
@@ -34,30 +33,38 @@ class Heap:
         """Returns Tue if buf[index] has only one child"""
         return self.rightChild(index) == len(self.buf)
 
-    def percolateDown(self, L, index):
+    def percolateDown(self, index):
         """Validate Heap properties starting at buf[index]"""
         if self.leaf(index): return
 
         if self.oneChild(index):
-            if L[index] > L[self.leftChild(index)]:
-                (L[index], L[self.leftChild(index)]) = (L[self.leftChild(index)], L[index])
+            if self.buf[index] > self.buf[self.leftChild(index)]:
+                (self.buf[index], self.buf[self.leftChild(index)]) = (self.buf[self.leftChild(index)], self.buf[index])
             return
 
-        if min(L[self.leftChild(index)], L[self.rightChild(index)]) >= L[index]:
+        if min(self.buf[self.leftChild(index)], self.buf[self.rightChild(index)]) >= self.buf[index]:
             return
 
-        if L[self.leftChild(index)] < L[self.rightChild(index)]:
-            (L[index], L[self.leftChild(index)]) = (L[self.leftChild(index)], L[index])
-            self.percolateDown(L, self.leftChild(index))
+        if self.buf[self.leftChild(index)] < self.buf[self.rightChild(index)]:
+            (self.buf[index], self.buf[self.leftChild(index)]) = (self.buf[self.leftChild(index)], self.buf[index])
+            self.percolateDown(self.leftChild(index))
             return
 
-        (L[index], L[self.rightChild(index)]) = (L[self.rightChild(index)], L[index])
-        self.percolateDown(L, self.rightChild(index))
+        (self.buf[index], self.buf[self.rightChild(index)]) = (self.buf[self.rightChild(index)], self.buf[index])
+        self.percolateDown(self.rightChild(index))
         return
+
+    def removeMin(self):
+        self.buf[0] = self.buf.pop()
+        self.percolateDown(0)
+
 
 def main():
     L = [50, 88, 27, 58, 30, 21, 58, 13, 84, 24, 29, 43, 61, 44 ,65, 74, 76, 30, 82, 43]
     h = Heap(L)
+    print h.buf
+    h.removeMin()
+    print h.buf
 
 if __name__ == "__main__":
     main()
