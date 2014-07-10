@@ -54,17 +54,30 @@ class Heap:
         self.percolateDown(self.rightChild(index))
         return
 
+    def percolateUp(self, index):
+        """Move buf[index] up until Heap property is satisfied"""
+        if self.root(index): return
+
+        if self.buf[index] < self.buf[self.parent(index)]:
+            (self.buf[index], self.buf[self.parent(index)]) = (self.buf[self.parent(index)], self.buf[index])
+            self.percolateUp(self.parent(index))
+
+        return
+
     def removeMin(self):
         self.buf[0] = self.buf.pop()
         self.percolateDown(0)
 
+    def insert(self, num):
+        self.buf.append(num)
+        self.percolateUp(len(self.buf)-1)
 
 def main():
     L = [50, 88, 27, 58, 30, 21, 58, 13, 84, 24, 29, 43, 61, 44 ,65, 74, 76, 30, 82, 43]
-    h = Heap(L)
-    print h.buf
-    h.removeMin()
-    print h.buf
+    L2 = [10, 15, 14, 18, 20, 30]
+    h = Heap(L2)
+    h.insert(9)
+    assert h.buf == [9, 15, 10, 18, 20, 30, 14]
 
 if __name__ == "__main__":
     main()
